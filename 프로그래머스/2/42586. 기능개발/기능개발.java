@@ -2,31 +2,29 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-    List<Integer> deployDays = new ArrayList<>();
-    List<Integer> deployCounts = new ArrayList<>();
+        
+        List<Integer> answer = new ArrayList<>();
+        
+        int deployCount = 0;
+        for (int i = 0; i < progresses.length; i++) {
+            deployCount += 1;
+            int deployTime = (100 - progresses[i] + speeds[i] - 1) / speeds[i];
 
-    for (int i = 0; i < progresses.length; i++) {
-        deployDays.add((int) Math.ceil((100.0 - progresses[i]) / speeds[i]));
-    }
+            for (int j = i + 1; j < progresses.length; j++) {
+                if (progresses[j] + deployTime * speeds[j] >= 100) {
+                    deployCount += 1;
+                    i += 1;
+                } else {
+                    break;
+                }
+            }
 
-    int currentIndex = 0;
-
-    while (currentIndex < progresses.length) {
-        currentIndex++;
-
-        int deployCount = 1;
-        int nextIndex = currentIndex;
-
-        while (nextIndex < progresses.length
-                && deployDays.get(nextIndex) <= deployDays.get(currentIndex - 1)) {
-            deployCount++;
-            nextIndex++;
+            answer.add(deployCount);
+            deployCount = 0;
         }
-
-        deployCounts.add(deployCount);
-        currentIndex = nextIndex;
-    }
-
-    return deployCounts.stream().mapToInt(i->i).toArray();
+        
+        return answer.stream()
+            .mapToInt(Integer::intValue)
+            .toArray();
     }
 }
