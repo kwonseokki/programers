@@ -2,28 +2,35 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        Queue<int[]> queue = new LinkedList<>();
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> maxPq = new PriorityQueue<>(Collections.reverseOrder());
+        Queue<int[]> pQ = new LinkedList<>();
 
+        // [우선순위, 위치]
         for (int i = 0; i < priorities.length; i++) {
-            queue.add(new int[]{priorities[i], i});
-            pq.add(priorities[i]);
+            pQ.offer(new int[]{priorities[i], i});
         }
 
-        int count = 0;
+        for (int priority : priorities) {
+            maxPq.offer(priority);
+        }
 
-        while (!queue.isEmpty()) {
-            int[] cur = queue.remove();
+        int cnt = 0;
 
-            if (cur[0] == pq.peek()) {
-                count++;
-                pq.remove();
-                if (cur[1] == location) break;
+        while (true) {
+            // 현재 프로세스가 가장 우선순위가 높다면 실행
+            // location이 동일하면 실행 카운트 리턴
+            int[] cur = pQ.poll();
+
+            if (maxPq.peek() == cur[0]) {
+                cnt++;
+
+                if (cur[1] == location) return cnt;
+
+                // 우선 순위만 제거
+                maxPq.poll();                
             } else {
-                queue.add(cur);
+                pQ.offer(cur);
             }
         }
-        
-        return count;
     }
 }
