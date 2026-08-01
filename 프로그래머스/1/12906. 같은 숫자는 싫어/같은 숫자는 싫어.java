@@ -2,17 +2,16 @@ import java.util.*;
 
 public class Solution {
     public int[] solution(int []arr) {
-        ArrayList<Integer> numList = new ArrayList();
-		
-		for (int num : arr) {
-		    if (numList.isEmpty()) {
-		        numList.add(num);
-		    }
-		    else if (numList.get(numList.size() - 1) != num) {
-		        numList.add(num);
-		    }
-		}
-        
-        return numList.stream().mapToInt(Integer::intValue).toArray();
+        List<Integer> arrList = new ArrayList<>();
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arrList.isEmpty() || arr[i] != arrList.get(arrList.size() - 1)) {
+                arrList.add(arr[i]);
+            }
+        }
+
+        return arrList.stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
     }
 }
